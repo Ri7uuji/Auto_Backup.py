@@ -67,7 +67,7 @@ if __name__ == '__main__':
 
     interval = arguments[t_argpos].replace("-t=", "")
     interval = interval.replace("m", "")
-    
+
     try:
         interval = int(interval)
     except Exception:
@@ -98,7 +98,7 @@ if __name__ == '__main__':
             printHelp()
             quit()
 
-    #if numberOfBkUps < 2:
+    # if numberOfBkUps < 2:
         #numberOfBkUps = 2
 
     if path[len(path)-1] == "/":
@@ -116,23 +116,13 @@ if __name__ == '__main__':
     splitPath = path.split("/")
     if not os.path.exists("backupcount.autobkup"):
         os.mknod("backupcount.autobkup")
-    os.system(
-        f'tar -czf {bkupdestination}{splitPath[len(splitPath)-1]}_{datetime.datetime.now().strftime("%d-%m-%Y_%H:%M")}.tar.gz {path}')
 
-    with open("backupcount.autobkup", "w") as f:
-        f.write(
-            f'{bkupdestination}{splitPath[len(splitPath)-1]}_{datetime.datetime.now().strftime("%d-%m-%Y_%H:%M")}.tar.gz\n')
-        f.close()
-        #need to read file in seperate statement
-    with open("backupcount.autobkup","r") as f:
+    with open("backupcount.autobkup", "r") as f:
         lines = f.readlines()
         f.close()
-    
-    print(lines[0].replace("\n", ""))
-    if n_argpos != 0 and len(lines) > numberOfBkUps:
-        print("hello")
+
+    if n_argpos != 0 and len(lines) >= numberOfBkUps:
         os.remove(lines[0].replace("\n", ""))
-        os.rmdir("/home/ryu/Projects/minetoon/crappyScripts/crappyScripts_16-01-2022_10:14.tar.gz")
         os.remove("backupcount.autobkup")
         os.mknod("backupcount.autobkup")
 
@@ -142,6 +132,13 @@ if __name__ == '__main__':
 
     if os.path.exists("callme.sh"):
         os.remove("callme.sh")
+    os.system(
+        f'tar -czf {bkupdestination}{splitPath[len(splitPath)-1]}_{datetime.datetime.now().strftime("%d-%m-%Y_%H-%M")}.tar.gz {path}')
+
+    with open("backupcount.autobkup", "w") as f:
+        f.write(
+            f'{bkupdestination}{splitPath[len(splitPath)-1]}_{datetime.datetime.now().strftime("%d-%m-%Y_%H-%M")}.tar.gz\n')
+        f.close()
 
     os.mknod("callme.sh")
 
