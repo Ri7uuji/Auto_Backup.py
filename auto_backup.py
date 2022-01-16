@@ -67,6 +67,7 @@ if __name__ == '__main__':
 
     interval = arguments[t_argpos].replace("-t=", "")
     interval = interval.replace("m", "")
+    
     try:
         interval = int(interval)
     except Exception:
@@ -75,12 +76,14 @@ if __name__ == '__main__':
         quit()
 
     path = arguments[p_argpos].replace("-p=", "")
+
     if not os.path.exists(path):
         print(f'{path} is not a path.')
         printHelp()
         quit()
 
     bkupdestination = arguments[tp_argpos].replace("-tp=", "")
+
     if not os.path.exists(bkupdestination):
         print(f'{bkupdestination} is not a path.')
         printHelp()
@@ -95,8 +98,8 @@ if __name__ == '__main__':
             printHelp()
             quit()
 
-    if numberOfBkUps < 2:
-        numberOfBkUps = 2
+    #if numberOfBkUps < 2:
+        #numberOfBkUps = 2
 
     if path[len(path)-1] == "/":
         newPath = ""
@@ -115,20 +118,33 @@ if __name__ == '__main__':
         os.mknod("backupcount.autobkup")
     os.system(
         f'tar -czf {bkupdestination}{splitPath[len(splitPath)-1]}_{datetime.datetime.now().strftime("%d-%m-%Y_%H:%M")}.tar.gz {path}')
-    with open("backupcount.autobkup", "r+") as f:
+
+    with open("backupcount.autobkup", "w") as f:
         f.write(
             f'{bkupdestination}{splitPath[len(splitPath)-1]}_{datetime.datetime.now().strftime("%d-%m-%Y_%H:%M")}.tar.gz\n')
+        f.close()
+        #need to read file in seperate statement
+    with open("backupcount.autobkup","r") as f:
         lines = f.readlines()
-    if n_argpos != 0 and len(lines) >= numberOfBkUps:
+        f.close()
+    
+    print(lines[0].replace("\n", ""))
+    if n_argpos != 0 and len(lines) > numberOfBkUps:
+        print("hello")
         os.remove(lines[0].replace("\n", ""))
+        os.rmdir("/home/ryu/Projects/minetoon/crappyScripts/crappyScripts_16-01-2022_10:14.tar.gz")
         os.remove("backupcount.autobkup")
         os.mknod("backupcount.autobkup")
+
         with open("backupcount.autobkup", "r+") as f:
             lines.remove(lines[0])
             f.writelines(lines)
+
     if os.path.exists("callme.sh"):
         os.remove("callme.sh")
+
     os.mknod("callme.sh")
+
     with open("callme.sh", "w") as f:
         f.write("#!/bin/bash\n")
         f.write("cd "+os.path.realpath(__file__).replace("auto_backup.py", "")+"\n")
@@ -136,5 +152,6 @@ if __name__ == '__main__':
         for eachArg in arguments:
             combinedArgs += eachArg + " "
         f.write(f'python3 {combinedArgs}')
+
     os.system(f'chmod +x callme.sh')
     os.system(f'at now + {interval} minute -f callme.sh')
