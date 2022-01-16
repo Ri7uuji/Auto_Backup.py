@@ -117,6 +117,8 @@ if __name__ == '__main__':
     if not os.path.exists("backupcount.autobkup"):
         os.mknod("backupcount.autobkup")
 
+    lines = []
+
     with open("backupcount.autobkup", "r") as f:
         lines = f.readlines()
         f.close()
