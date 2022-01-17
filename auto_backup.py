@@ -1,6 +1,7 @@
 import sys
 import os
 import datetime
+import subprocess
 
 
 def printHelp():
@@ -120,17 +121,17 @@ if __name__ == '__main__':
     lines = []
 
     with open("backupcount.autobkup", "r") as f:
-        lines = f.readlines()
+        lines = f.readlines(-1)
         f.close()
 
     if n_argpos != 0 and len(lines) >= numberOfBkUps:
         os.remove(lines[0].replace("\n", ""))
         os.remove("backupcount.autobkup")
         os.mknod("backupcount.autobkup")
-
         with open("backupcount.autobkup", "r+") as f:
             lines.remove(lines[0])
             f.writelines(lines)
+            f.close()
 
     if os.path.exists("callme.sh"):
         os.remove("callme.sh")
@@ -138,6 +139,7 @@ if __name__ == '__main__':
         f'tar -czf {bkupdestination}{splitPath[len(splitPath)-1]}_{datetime.datetime.now().strftime("%d-%m-%Y_%H-%M")}.tar.gz {path}')
 
     with open("backupcount.autobkup", "w") as f:
+        f.writelines(lines)
         f.write(
             f'{bkupdestination}{splitPath[len(splitPath)-1]}_{datetime.datetime.now().strftime("%d-%m-%Y_%H-%M")}.tar.gz\n')
         f.close()
@@ -145,12 +147,12 @@ if __name__ == '__main__':
     os.mknod("callme.sh")
 
     with open("callme.sh", "w") as f:
-        f.write("#!/bin/bash\n")
         f.write("cd "+os.path.realpath(__file__).replace("auto_backup.py", "")+"\n")
         combinedArgs = ''
         for eachArg in arguments:
             combinedArgs += eachArg + " "
         f.write(f'python3 {combinedArgs}')
+        f.close()
 
     os.system(f'chmod +x callme.sh')
     os.system(f'at now + {interval} minute -f callme.sh')
