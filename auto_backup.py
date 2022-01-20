@@ -135,13 +135,14 @@ if __name__ == '__main__':
 
     if os.path.exists("callme.sh"):
         os.remove("callme.sh")
+    fileName =f'{bkupdestination}{splitPath[len(splitPath)-1]}_{datetime.datetime.now().strftime("%d-%m-%Y_%H-%M")}.tar.gz'
     os.system(
-        f'tar -czf {bkupdestination}{splitPath[len(splitPath)-1]}_{datetime.datetime.now().strftime("%d-%m-%Y_%H-%M")}.tar.gz {path}')
+        f'tar -czf {fileName} {path}')
 
     with open("backupcount.autobkup", "w") as f:
         f.writelines(lines)
         f.write(
-            f'{bkupdestination}{splitPath[len(splitPath)-1]}_{datetime.datetime.now().strftime("%d-%m-%Y_%H-%M")}.tar.gz\n')
+            f'{fileName}\n')
         f.close()
 
     os.mknod("callme.sh")
