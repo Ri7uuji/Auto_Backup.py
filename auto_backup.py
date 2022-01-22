@@ -9,10 +9,12 @@ def printHelp():
         Outputs help.
     """
     print("flags:")
-    print('[-t=time_in_min]       interval of backup')
+    print('[-t=time_in_min]     interval of backup')
+    print('[-t2=<int><w/d/m>]   interval of secondary backup')
     print('[-p=path]            str of file/folder path')
     print('[-tp=path]           backup folder')
-    print('[-n=int]             number of backups b4 deletion, if undefined no backups will be deleted. 2 is the minimum.')
+    print('[-n=int]             number of backups b4 deletion, if undefined no backups will be deleted')
+    print('[-n2=int]            same as n just for secondary backups')
 
 
 if __name__ == '__main__':
