@@ -32,6 +32,11 @@ if __name__ == '__main__':
     tp_argpos = 0
     n_argpos = int()
     n_argpos = 0
+    t2_argpos = int()
+    t2_argpos = 0
+    n2_argpos = int()
+    n2_argpos = 0
+
     while count >= 1:
         try:
             idx = arguments[count].index("-t=")
@@ -50,7 +55,17 @@ if __name__ == '__main__':
                         idx = arguments[count].index("-tp=")
                         tp_argpos = count
                     except Exception:
-                        None
+                        try:
+                            idx = arguments[count].index("-n2=")
+                            n2_argpos = count
+                        except Exception:
+                            try:
+                                idx = arguments[count].index("-t2=")
+                                t2_argpos = count
+                            except Exception:
+                                None
+
+                            
         count -= 1
 
     if t_argpos == 0:
