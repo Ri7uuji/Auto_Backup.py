@@ -25,6 +25,8 @@ if __name__ == '__main__':
         quit()
 
     count = len(arguments)-1
+    
+    #declaration of ints for intellisense
     t_argpos = int()
     t_argpos = 0
     p_argpos = int()
